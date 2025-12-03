@@ -14,6 +14,7 @@ services:
       - "8502:8502"
       - "8503:8503"
     volumes:
+      - ./.env:/app/.env
       - ./logs:/app/logs
       - ./final_reports:/app/final_reports
       - ./insight_engine_streamlit_reports:/app/insight_engine_streamlit_reports

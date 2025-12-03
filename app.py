@@ -116,6 +116,31 @@ def read_config_values():
         return {}
 
 
+def check_config_completeness():
+    """检查关键配置项是否已在.env中配置完整"""
+    try:
+        config_values = read_config_values()
+        
+        # 定义必需的配置项（至少需要有数据库配置）
+        required_keys = ['DB_HOST', 'DB_USER', 'DB_PASSWORD', 'DB_NAME']
+        
+        # 检查必需配置是否存在且不为空
+        for key in required_keys:
+            value = config_values.get(key, '')
+            # 如果是占位符或空值，认为未配置
+            if not value or value in ['your_host', 'your_db_host', 'your_username', 
+                                       'your_db_user', 'your_password', 'your_db_password', 
+                                       'your_db_name', 'mindspider']:
+                logger.info(f"配置项 {key} 未正确配置: {value}")
+                return False
+        
+        logger.info("检测到.env文件中有完整的数据库配置")
+        return True
+    except Exception as exc:
+        logger.exception(f"检查配置完整性失败: {exc}")
+        return False
+
+
 def _serialize_config_value(value):
     """Serialize Python values back to a config.py assignment-friendly string."""
     if isinstance(value, bool):
@@ -975,6 +1000,22 @@ def update_config():
 @app.route('/api/system/status')
 def get_system_status():
     """返回系统启动状态。"""
+    # 检查是否有任何Streamlit应用正在运行
+    check_app_status()
+    running_apps = [name for name, info in processes.items() 
+                    if name in STREAMLIT_SCRIPTS and info['status'] == 'running']
+    
+    # 如果有至少一个应用在运行，自动标记系统为已启动
+    if running_apps and not system_state['started']:
+        logger.info(f"检测到运行中的应用: {running_apps}，自动标记系统为已启动")
+        _set_system_state(started=True)
+    
+    # 如果配置已完整（.env文件中有必要的配置），也标记为已启动
+    # 这样用户不需要每次都手动填写配置
+    if not system_state['started'] and check_config_completeness():
+        logger.info("检测到.env文件配置完整，自动标记系统为已配置")
+        _set_system_state(started=True)
+    
     state = _get_system_state()
     return jsonify({
         'success': True,

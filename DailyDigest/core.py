@@ -23,7 +23,7 @@ spec.loader.exec_module(root_config)
 settings = root_config.settings
 
 # Import database modules
-from MindSpider.DeepSentimentCrawling.MediaCrawler.database.db_session import get_session
+from MindSpider.DeepSentimentCrawling.MediaCrawler.database.db_session import get_session, clear_engine_cache
 from MindSpider.DeepSentimentCrawling.MediaCrawler.database.models import WeiboNote
 
 # Import prompt
@@ -155,6 +155,9 @@ class DailyDigest:
 
 # Helper function for synchronous execution (e.g. from Streamlit)
 def run_digest_generation(keyword: str, hours: int = 24):
+    # Clear engine cache to avoid "attached to a different loop" error
+    # because asyncio.run creates a new loop each time
+    clear_engine_cache()
     digest = DailyDigest()
     return asyncio.run(digest.generate_digest(keyword, hours))
 

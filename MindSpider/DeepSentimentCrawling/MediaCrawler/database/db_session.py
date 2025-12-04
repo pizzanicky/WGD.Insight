@@ -17,6 +17,16 @@ except (ImportError, ModuleNotFoundError, AttributeError):
 # Keep a cache of engines
 _engines = {}
 
+async def close_engines():
+    """Close all cached engines."""
+    for engine in _engines.values():
+        await engine.dispose()
+    _engines.clear()
+
+def clear_engine_cache():
+    """Clear the engine cache (useful when switching event loops)."""
+    _engines.clear()
+
 
 async def create_database_if_not_exists(db_type: str):
     if db_type == "mysql" or db_type == "db":

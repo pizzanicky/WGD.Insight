@@ -6,6 +6,10 @@ from pathlib import Path
 from sqlalchemy import select, and_
 from loguru import logger
 
+# Load environment variables from .env file
+from dotenv import load_dotenv
+load_dotenv()
+
 # Setup paths
 project_root = Path(__file__).resolve().parents[1]
 media_crawler_root = project_root / "MindSpider" / "DeepSentimentCrawling" / "MediaCrawler"

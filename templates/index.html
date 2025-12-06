@@ -1092,7 +1092,11 @@
             <div class="console-section">
                 <!-- 应用切换按钮 -->
                 <div class="app-switcher">
-                    <button class="app-button active" data-app="insight">
+                    <button class="app-button active" data-app="daily_digest">
+                        <span class="status-indicator" id="status-daily_digest"></span>
+                        Daily Digest
+                    </button>
+                    <button class="app-button" data-app="insight">
                         <span class="status-indicator" id="status-insight"></span>
                         Insight Engine
                     </button>
@@ -1103,10 +1107,6 @@
                     <button class="app-button" data-app="query">
                         <span class="status-indicator" id="status-query"></span>
                         Query Engine
-                    </button>
-                    <button class="app-button" data-app="daily_digest">
-                        <span class="status-indicator" id="status-daily_digest"></span>
-                        Daily Digest
                     </button>
                     <button class="app-button" data-app="forum">
                         <span class="status-indicator running" id="status-forum"></span>
@@ -1160,7 +1160,7 @@
     <script>
         // 全局变量
         let socket;
-        let currentApp = 'insight';
+        let currentApp = 'daily_digest';
         let appStatus = {
             insight: 'stopped',
             media: 'stopped',

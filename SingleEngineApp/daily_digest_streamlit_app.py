@@ -126,9 +126,21 @@ def render_digest_result(result, keyword):
                 font-weight: 700;
                 color: {badge_color};
                 background-color: {badge_bg};
-                margin-bottom: 28px;
+                margin-bottom: 12px;
                 border: 2px solid {badge_color};
                 letter-spacing: 2px;
+            }}
+            .score-display {{
+                font-size: 16px;
+                font-weight: 600;
+                color: #e2e8f0;
+                margin-bottom: 24px;
+                letter-spacing: 1px;
+            }}
+            .score-percent {{
+                font-size: 13px;
+                color: #94a3b8;
+                font-weight: 400;
             }}
             .headline {{
                 font-size: 24px;
@@ -166,6 +178,15 @@ def render_digest_result(result, keyword):
                 padding-top: 20px;
                 z-index: 1;
             }}
+            .disclaimer {{
+                text-align: center;
+                font-size: 9px;
+                color: #94a3b8;
+                opacity: 0.7;
+                padding: 8px 0;
+                letter-spacing: 0.5px;
+                z-index: 1;
+            }}
         </style>
         <div class="cover-card-container">
             <div class="cover-card">
@@ -175,10 +196,14 @@ def render_digest_result(result, keyword):
                 </div>
                 <div class="card-body">
                     <div class="sentiment-badge">{card.get('sentiment_label', 'N/A')}</div>
+                    <div class="score-display">{score:.1f}/10 <span class="score-percent">({int(score*10)}%)</span></div>
                     <div class="headline">{card.get('headline', 'Market Insight')}</div>
                 </div>
                 <div class="card-footer">
                     {''.join([f'<span class="factor-tag">{f}</span>' for f in card.get('key_factors', [])])}
+                </div>
+                <div class="disclaimer">
+                    网络舆情信息，并非投资建议
                 </div>
                 <div class="brand-footer">
                     WGD Insight | Sentiment Data
